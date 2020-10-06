@@ -7,33 +7,41 @@ require_once __DIR__ .'/../traits/GetContratto.php';
    protected $nomeDipendente;
    protected $cognomeDipendente;
    protected $indirizzoDipendente;
+   protected $email;
+   protected $codiceFiscale;
    public $ruolo;
    public $contratto;
 
-   public function __construct($_codiceDipendente, $_nomeDipendente,$_cognomeDipendente,$_indirizzoDipendente) {
-     if ( (!empty($this->codiceDipendente)) || (is_nan($this->codiceDipendente)) ) {
-       die('Codice dipendente non valido');
-     } else {
-       $this->codiceDipendente = $_codiceDipendente;
+   public function __construct($_codiceDipendente, $_nomeDipendente,$_cognomeDipendente,$_indirizzoDipendente, $_email, $_codiceFiscale) {
+
+     //controlli
+
+     if (is_string($_codiceDipendente)) {
+       throw new Exception('Codice dipendente non valido');
      }
 
-     if (!empty($this->nomeDipendente)) {
-       die('Non hai inserito il nome');
-     } else {
-       $this->nomeDipendente = $_nomeDipendente;
+     if ( (is_numeric($_nomeDipendente)) || (!is_string($_nomeDipendente)) ){
+       throw new Exception('Nome dipendente non valido');
      }
 
-     if (!empty($this->cognomeDipendente)) {
-       die('Non hai inserito il cognome');
-     } else {
-       $this->cognomeDipendente = $_cognomeDipendente;
+     if (is_numeric($_cognomeDipendente)) {
+       throw new Exception('Cognome dipendente non valido');
      }
 
-     if (!empty($this->indirizzoDipendente)) {
-       die("Non hai inserito l'indirizzo");
-     } else {
-       $this->indirizzoDipendente = $_indirizzoDipendente;
+     if(!filter_var($_email, FILTER_VALIDATE_EMAIL)) {
+         throw new Exception('Email non valido');
      }
+
+     if(strlen($_codiceFiscale)<>16 || !is_string($_codiceFiscale)){
+         throw new Exception('Codice fiscale errato');
+     }
+
+     $this->codiceDipendente = $_codiceDipendente;
+     $this->nomeDipendente = $_nomeDipendente;
+     $this->cognomeDipendente = $_cognomeDipendente;
+     $this->indirizzoDipendente = $_indirizzoDipendente;
+     $this->email = $_email;
+     $this->codiceFiscale = $_codiceFiscale;
 
    }
 
@@ -51,7 +59,7 @@ require_once __DIR__ .'/../traits/GetContratto.php';
 
    public function setCognome($_cognomeDipendente) {
      if (is_numeric($this->nomeDipendente)) {
-       die('nome non valido');
+       die('cognome non valido');
      } else {
         $this->cognomeDipendente = $_cognomeDipendente;
      }
@@ -62,4 +70,3 @@ require_once __DIR__ .'/../traits/GetContratto.php';
    }
 
  }
- ?>
